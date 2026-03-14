@@ -16,10 +16,8 @@ const { form, loading, notice, errorMessage, submit } = useLogin();
         <UiInput
           v-model="form.email"
           label="Email"
-          type="email"
           placeholder="you@example.com"
           autocomplete="email"
-          required
         />
 
         <UiInput
@@ -28,8 +26,6 @@ const { form, loading, notice, errorMessage, submit } = useLogin();
           type="password"
           placeholder="Enter your password"
           autocomplete="current-password"
-          :minlength="6"
-          required
         />
 
         <UiCheckbox v-model="form.rememberMe" label="Remember me" />
