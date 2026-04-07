@@ -1,18 +1,38 @@
+// Prisma Schema Language (PSL): по этому файлу Prisma генерирует миграции и Prisma Client.
+
 generator client {
+  // Генератор Prisma Client для Node.js/TypeScript.
+  // После `npx prisma generate` вы получаете типизированный клиент `@prisma/client`.
   provider = "prisma-client-js"
 }
 
 datasource db {
+  // Тип базы данных (важно для типов, миграций и SQL-диалекта).
   provider = "postgresql"
 }
 
 model User {
+  // Primary key (PK). В нашем демо это строковый id.
   id           String   @id
+
+  // Уникальный email пользователя (unique index в базе).
   email        String   @unique
+
+  // Необязательное имя (в базе будет nullable).
   name         String?
+
+  // Фамилия пользователя (необязательная).
+  surname String?
+
+  // Дата/время последнего логина.
+  // Важно: это DateTime (timestamp), а “красивое” форматирование делаем в UI/логах,
+  // а не храним форматированную строку в этом поле.
   lastLoginAt  DateTime
 
+  // Когда запись была создана (по умолчанию — текущий момент времени на стороне БД).
   createdAt    DateTime @default(now())
+
+  // Когда запись была обновлена (Prisma автоматически обновляет при update).
   updatedAt    DateTime @updatedAt
 }
 
