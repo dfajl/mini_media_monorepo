@@ -1,14 +1,22 @@
 import { reactive, ref } from 'vue';
 import { ApiError, login } from '@/shared/api';
 
+export type AuthMode = 'signIn' | 'signUp';
+
 export type LoginForm = {
+  fullName: string;
+  birthDate: string;
   email: string;
   password: string;
   rememberMe: boolean;
 };
 
 export function useLogin() {
+  const mode = ref<AuthMode>('signIn');
+
   const form = reactive<LoginForm>({
+    fullName: '',
+    birthDate: '',
     email: '',
     password: '',
     rememberMe: false,
@@ -24,6 +32,13 @@ export function useLogin() {
     errorMessage.value = '';
 
     try {
+      if (mode.value === 'signUp') {
+        // Эндпоинта регистрации пока нет — оставляем UI-режим,
+        // чтобы позже просто подключить API.
+        notice.value = `Account creation is not implemented yet. (fullName="${form.fullName}", birthDate="${form.birthDate}")`;
+        return;
+      }
+
       const result = await login({
         email: form.email,
         password: form.password,
@@ -41,6 +56,7 @@ export function useLogin() {
   }
 
   return {
+    mode,
     form,
     loading,
     notice,
