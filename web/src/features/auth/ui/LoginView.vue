@@ -6,10 +6,10 @@ import {
   UiLoader,
   UiSegmentedControl,
 } from '@/ui-kit';
-import { useLogin } from '@/features/auth/model/useLogin';
+import { useLogin } from '@/features/auth/composables/useLogin';
 import { createAutoHeightTransitionHooks } from '@/shared/utils/autoHeightTransition';
 
-const { mode, form, loading, notice, errorMessage, submit } = useLogin();
+const { mode, form, errors, loading, notice, errorMessage, submit } = useLogin();
 const transition = createAutoHeightTransitionHooks();
 
 const authModeOptions = [
@@ -51,6 +51,7 @@ const authModeOptions = [
               label="Full name"
               placeholder="Иванов Иван Иванович"
               autocomplete="name"
+              :error="errors.fullName"
             />
 
             <div class="auth-field">
@@ -62,6 +63,9 @@ const authModeOptions = [
                 type="date"
                 autocomplete="bday"
               />
+              <span v-if="errors.birthDate" class="auth-field__error">
+                {{ errors.birthDate }}
+              </span>
             </div>
           </div>
         </Transition>
@@ -70,6 +74,7 @@ const authModeOptions = [
           v-model="form.email"
           :label="mode === 'signIn' ? 'Email' : 'Login (email)'"
           placeholder="you@example.com"
+          :error="errors.email"
         />
 
         <UiInput
@@ -77,6 +82,7 @@ const authModeOptions = [
           :label="mode === 'signIn' ? 'Password' : 'Create password'"
           type="password"
           :placeholder="mode === 'signIn' ? 'Enter your password' : 'Choose a password'"
+          :error="errors.password"
         />
 
         <UiCheckbox
@@ -179,6 +185,11 @@ h1 {
   color: #0f172a;
   font-size: 0.9rem;
   font-weight: 600;
+}
+
+.auth-field__error {
+  font-size: 0.83rem;
+  color: #dc2626;
 }
 
 .auth-field__input {

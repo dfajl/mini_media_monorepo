@@ -1,5 +1,6 @@
 import { reactive, ref } from 'vue';
 import { ApiError, login } from '@/shared/api';
+import { validateAuthForm } from '../utils/validateAuthForm';
 
 export type AuthMode = 'signIn' | 'signUp';
 
@@ -10,6 +11,10 @@ export type LoginForm = {
   password: string;
   rememberMe: boolean;
 };
+
+export type LoginFormErrors = Partial<
+  Record<keyof Omit<LoginForm, 'rememberMe'>, string>
+>;
 
 export function useLogin() {
   const mode = ref<AuthMode>('signIn');
@@ -22,14 +27,32 @@ export function useLogin() {
     rememberMe: false,
   });
 
+  const errors = reactive<LoginFormErrors>({});
+
   const loading = ref(false);
   const notice = ref('');
   const errorMessage = ref('');
 
+  function validate(): boolean {
+    const nextErrors = validateAuthForm(mode.value, form);
+
+    errors.fullName = nextErrors.fullName ?? '';
+    errors.birthDate = nextErrors.birthDate ?? '';
+    errors.email = nextErrors.email ?? '';
+    errors.password = nextErrors.password ?? '';
+
+    return Object.keys(nextErrors).length === 0;
+  }
+
   async function submit() {
-    loading.value = true;
     notice.value = '';
     errorMessage.value = '';
+
+    if (!validate()) {
+      return;
+    }
+
+    loading.value = true;
 
     try {
       if (mode.value === 'signUp') {
@@ -58,6 +81,7 @@ export function useLogin() {
   return {
     mode,
     form,
+    errors,
     loading,
     notice,
     errorMessage,
