@@ -17,7 +17,10 @@ import { AuthModule } from './auth/auth.module';
     // - при запуске из корня: возьмёт `api/.env` (то есть `./api/.env`)
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: [join(process.cwd(), '.env'), join(process.cwd(), 'api', '.env')],
+      envFilePath: [
+        join(process.cwd(), '.env'),
+        join(process.cwd(), 'api', '.env'),
+      ],
     }),
     EventEmitterModule.forRoot(),
     AuthModule,

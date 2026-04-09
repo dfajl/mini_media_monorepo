@@ -22,12 +22,24 @@ export class AuthEventsListener {
       // upsert: если пользователя (по email) ещё нет — создаём,
       // если есть — обновляем время последнего логина.
       await this.prisma.user.upsert({
+        // `where` — критерий поиска записи, по которой Prisma поймёт:
+        // существует ли пользователь уже в базе.
+        //
+        // Важно: поле в `where` должно быть уникальным/идентифицирующим
+        // (у нас `email` помечен в schema.prisma как `@unique`).
         where: { email: event.email },
+
+        // `create` — что вставлять в БД, если пользователь НЕ найден по `where`.
         create: {
           id: event.userId,
           email: event.email,
+          name: event.name,
+          surname: event.surname,
           lastLoginAt: at,
         },
+
+        // `update` — что обновлять в БД, если пользователь найден по `where`.
+        // Здесь мы не трогаем id/email, а просто фиксируем время последнего логина.
         update: {
           lastLoginAt: at,
         },

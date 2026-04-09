@@ -33,11 +33,14 @@ export class AuthService {
       id: '1',
       email,
       name: 'Demo User',
+      surname: 'FAYL',
     };
 
     const loginEvent: AuthLoginSuccessEvent = {
       userId: user.id,
       email: user.email,
+      name: user.name,
+      surname: user.surname,
       at: new Date().toISOString(),
     };
 
