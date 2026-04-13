@@ -1,5 +1,5 @@
 import { reactive, ref } from 'vue';
-import { ApiError, login } from '@/shared/api';
+import { ApiError, login, signUp } from '@/shared/api';
 import { validateAuthForm } from '../utils/validateAuthForm';
 
 export type AuthMode = 'signIn' | 'signUp';
@@ -56,9 +56,16 @@ export function useLogin() {
 
     try {
       if (mode.value === 'signUp') {
-        // Эндпоинта регистрации пока нет — оставляем UI-режим,
-        // чтобы позже просто подключить API.
-        notice.value = `Account creation is not implemented yet. (fullName="${form.fullName}", birthDate="${form.birthDate}")`;
+        const result = await signUp({
+          fullName: form.fullName,
+          birthDate: form.birthDate,
+          email: form.email,
+          password: form.password,
+        });
+
+        notice.value = `Account created for ${result.user.email}. You can sign in now.`;
+        mode.value = 'signIn';
+        form.password = '';
         return;
       }
 

@@ -10,6 +10,8 @@ import {
 } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
+import { SignUpDto } from './dto/sign-up.dto';
+import type { SignUpResponse } from './auth.service';
 
 // В Swagger все эндпоинты этого контроллера будут в группе "auth"
 @ApiTags('auth')
@@ -36,5 +38,18 @@ export class AuthController {
   login(@Body() payload: LoginDto) {
     // @Body() payload = «в payload положи тело запроса целиком».
     return this.authService.login(payload);
+  }
+
+  @ApiOperation({
+    summary: 'Sign up with full name, birth date, email and password',
+  })
+  @ApiCreatedResponse({ description: 'User created' })
+  @ApiResponse({
+    status: 422,
+    description: 'Validation failed (invalid email, short password, etc.)',
+  })
+  @Post('sign-up')
+  signUp(@Body() payload: SignUpDto): Promise<SignUpResponse> {
+    return this.authService.signUp(payload);
   }
 }

@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "birthDate" TIMESTAMP(3),
+ADD COLUMN     "passwordHash" TEXT,
+ALTER COLUMN "lastLoginAt" SET DEFAULT CURRENT_TIMESTAMP;
