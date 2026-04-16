@@ -1,5 +1,6 @@
 import { reactive, ref } from 'vue';
-import { ApiError, login, signUp } from '@/shared/api';
+import { ApiError } from '@/core/api-client';
+import { login, signUp } from '@/features/auth/api/auth';
 import { validateAuthForm } from '../utils/validateAuthForm';
 
 export type AuthMode = 'signIn' | 'signUp';

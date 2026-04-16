@@ -1,4 +1,4 @@
-import { apiClient } from './http';
+import { apiClient } from '@/core/api-client';
 
 export type LoginRequest = {
   email: string;
