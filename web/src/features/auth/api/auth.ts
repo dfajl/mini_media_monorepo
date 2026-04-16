@@ -11,7 +11,11 @@ export type LoginResponse = {
   user: {
     id: string;
     email: string;
-    name: string;
+    name: string | null;
+    surname: string | null;
+    birthDate: string | null;
+    createdAt: string;
+    lastLoginAt: string;
   };
 };
 
@@ -32,6 +36,9 @@ export type SignUpResponse = {
     email: string;
     name: string | null;
     surname: string | null;
+    birthDate: string | null;
+    createdAt: string;
+    lastLoginAt: string;
   };
 };
 

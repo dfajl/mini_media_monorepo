@@ -11,7 +11,7 @@ import {
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { SignUpDto } from './dto/sign-up.dto';
-import type { SignUpResponse } from './auth.service';
+import { LoginResponseDto, SignUpResponseDto } from './dto/auth.responses.dto';
 
 // В Swagger все эндпоинты этого контроллера будут в группе "auth"
 @ApiTags('auth')
@@ -24,7 +24,10 @@ export class AuthController {
   // Swagger: краткое описание операции
   @ApiOperation({ summary: 'Login with email and password' })
   // Swagger: описание ответа 201 при успехе
-  @ApiCreatedResponse({ description: 'Login successful' })
+  @ApiCreatedResponse({
+    description: 'Login successful',
+    type: LoginResponseDto,
+  })
   // Swagger: описание ответа 401 при неверных данных
   @ApiUnauthorizedResponse({ description: 'Invalid email or password' })
   // Swagger: описание ответа 422 при ошибках валидации body
@@ -35,7 +38,7 @@ export class AuthController {
   // Обработчик запроса POST /auth/login
   @Post('login')
   // payload — тело запроса (JSON), приведённое к типу LoginDto
-  login(@Body() payload: LoginDto) {
+  login(@Body() payload: LoginDto): Promise<LoginResponseDto> {
     // @Body() payload = «в payload положи тело запроса целиком».
     return this.authService.login(payload);
   }
@@ -43,13 +46,13 @@ export class AuthController {
   @ApiOperation({
     summary: 'Sign up with full name, birth date, email and password',
   })
-  @ApiCreatedResponse({ description: 'User created' })
+  @ApiCreatedResponse({ description: 'User created', type: SignUpResponseDto })
   @ApiResponse({
     status: 422,
     description: 'Validation failed (invalid email, short password, etc.)',
   })
   @Post('sign-up')
-  signUp(@Body() payload: SignUpDto): Promise<SignUpResponse> {
+  signUp(@Body() payload: SignUpDto): Promise<SignUpResponseDto> {
     return this.authService.signUp(payload);
   }
 }

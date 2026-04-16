@@ -14,17 +14,23 @@ import {
 } from './events/auth.events';
 import { PrismaService } from '../prisma/prisma.service';
 
-const DEMO_EMAIL = process.env.AUTH_DEMO_EMAIL ?? 'demo@mini.media';
-const DEMO_PASSWORD = process.env.AUTH_DEMO_PASSWORD ?? 'password123';
-
 export type PublicUser = {
   id: string;
   email: string;
   name: string | null;
   surname: string | null;
+  birthDate: Date | null;
+  createdAt: Date;
+  lastLoginAt: Date;
 };
 
 export type SignUpResponse = {
+  user: PublicUser;
+};
+
+export type LoginResponse = {
+  accessToken: string;
+  tokenType: 'Bearer';
   user: PublicUser;
 };
 
@@ -35,7 +41,7 @@ export class AuthService {
     private readonly prisma: PrismaService,
   ) {}
 
-  login(payload: LoginDto) {
+  async login(payload: LoginDto): Promise<LoginResponse> {
     const email = payload.email?.trim().toLowerCase();
     const password = payload.password;
 
@@ -43,15 +49,38 @@ export class AuthService {
       throw new BadRequestException('Email and password are required');
     }
 
-    if (email !== DEMO_EMAIL || password !== DEMO_PASSWORD) {
+    const userWithSecrets = await this.prisma.user.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        surname: true,
+        birthDate: true,
+        createdAt: true,
+        passwordHash: true,
+      },
+    });
+
+    if (!userWithSecrets?.passwordHash) {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    const user = {
-      id: '1',
-      email,
-      name: 'Demo User',
-      surname: 'FAYL',
+    const ok = await bcrypt.compare(password, userWithSecrets.passwordHash);
+    if (!ok) {
+      throw new UnauthorizedException('Invalid email or password');
+    }
+
+    const lastLoginAt = new Date();
+
+    const user: PublicUser = {
+      id: userWithSecrets.id,
+      email: userWithSecrets.email,
+      name: userWithSecrets.name,
+      surname: userWithSecrets.surname,
+      birthDate: userWithSecrets.birthDate,
+      createdAt: userWithSecrets.createdAt,
+      lastLoginAt,
     };
 
     const loginEvent: AuthLoginSuccessEvent = {
@@ -59,7 +88,7 @@ export class AuthService {
       email: user.email,
       name: user.name,
       surname: user.surname,
-      at: new Date().toISOString(),
+      at: lastLoginAt.toISOString(),
     };
 
     this.eventEmitter.emit(AUTH_LOGIN_SUCCESS_EVENT, loginEvent);
@@ -108,6 +137,9 @@ export class AuthService {
         email: true,
         name: true,
         surname: true,
+        birthDate: true,
+        createdAt: true,
+        lastLoginAt: true,
       },
     });
 

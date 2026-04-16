@@ -74,7 +74,7 @@ export function useLogin() {
         email: form.email,
         password: form.password,
       });
-      notice.value = `Logged in as ${result.user.name}`;
+      notice.value = `Logged in as ${result.user.name ?? result.user.email}`;
     } catch (error: unknown) {
       if (error instanceof ApiError) {
         errorMessage.value = error.message;
