@@ -1,6 +1,8 @@
 import { reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { ApiError } from '@/core/api-client';
 import { login, signUp } from '@/features/auth/api/auth';
+import { useAuthStore } from '@/stores/auth';
 import { validateAuthForm } from '../utils/validateAuthForm';
 
 export type AuthMode = 'signIn' | 'signUp';
@@ -18,6 +20,8 @@ export type LoginFormErrors = Partial<
 >;
 
 export function useLogin() {
+  const router = useRouter();
+  const auth = useAuthStore();
   const mode = ref<AuthMode>('signIn');
 
   const form = reactive<LoginForm>({
@@ -64,8 +68,8 @@ export function useLogin() {
           password: form.password,
         });
 
-        notice.value = `Account created for ${result.user.email}. You can sign in now.`;
-        mode.value = 'signIn';
+        auth.setAuth({ user: result.user });
+        await router.push({ name: 'account' });
         form.password = '';
         return;
       }
@@ -74,7 +78,13 @@ export function useLogin() {
         email: form.email,
         password: form.password,
       });
-      notice.value = `Logged in as ${result.user.name ?? result.user.email}`;
+
+      auth.setAuth({
+        accessToken: result.accessToken,
+        tokenType: result.tokenType,
+        user: result.user,
+      });
+      await router.push({ name: 'account' });
     } catch (error: unknown) {
       if (error instanceof ApiError) {
         errorMessage.value = error.message;
