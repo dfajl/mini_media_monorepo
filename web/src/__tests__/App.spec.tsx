@@ -7,6 +7,7 @@ import {
 	vi,
 } from 'vitest';
 import {
+	act,
 	cleanup,
 	fireEvent,
 	render,
@@ -14,9 +15,9 @@ import {
 	waitFor,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Link, MemoryRouter } from 'react-router';
-import { Provider } from 'react-redux';
-import App from '../App';
+import { createMemoryRouter, RouterProvider } from 'react-router';
+import { ReduxProvider } from '../Providers/ReduxProvider';
+import { routes } from '../router/routes';
 import { createAppStore } from '../stores';
 import { selectIsAuthenticated } from '../stores/auth';
 
@@ -32,15 +33,13 @@ const user = {
 const fetchMock = vi.fn();
 function renderApp(path = '/') {
 	const store = createAppStore();
+	const router = createMemoryRouter(routes, { initialEntries: [path] });
 	const result = render(
-		<MemoryRouter initialEntries={[path]}>
-			<Provider store={store}>
-				<Link to='/account'>Inspect account</Link>
-				<App />
-			</Provider>
-		</MemoryRouter>,
+		<ReduxProvider store={store}>
+			<RouterProvider router={router} />
+		</ReduxProvider>,
 	);
-	return { ...result, store };
+	return { ...result, store, router };
 }
 function submitButton(name = 'Sign in') {
 	return screen.getAllByRole('button', { name }).at(-1)!;
@@ -82,7 +81,7 @@ describe('App', () => {
 	});
 	it('signs in, displays the profile, and clears it on logout', async () => {
 		respond({ accessToken: 'token', tokenType: 'Bearer', user });
-		const { store } = renderApp('/login');
+		const { store, router } = renderApp('/login');
 		const events = await enterCredentials();
 		await events.click(submitButton());
 		await screen.findByRole('heading', { name: 'Account' });
@@ -98,7 +97,7 @@ describe('App', () => {
 		expect(store.getState().auth).toEqual({ accessToken: null, tokenType: null, user: null });
 		expect(selectIsAuthenticated(store.getState())).toBe(false);
 		expect(screen.getByRole('heading', { name: 'Welcome back' })).toBeTruthy();
-		await events.click(screen.getByRole('link', { name: 'Inspect account' }));
+		await act(() => router.navigate('/account'));
 		expect(screen.getByText('No user data yet')).toBeTruthy();
 	});
 	it('registers and displays the returned user', async () => {

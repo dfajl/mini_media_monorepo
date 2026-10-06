@@ -23,8 +23,11 @@ npm run dev
 
 ## Структура для изучения React
 
-- `src/main.tsx` — точка входа: `createRoot`, роутер и Redux `Provider`.
-- `src/App.tsx` — маршруты `/login` и `/account` (React Router).
+- `src/main.tsx` — точка входа: `createRoot` и глобальные стили.
+- `src/App.tsx` — подключение Redux и роутера через провайдеры.
+- `src/Providers/ReduxProvider.tsx` — подключение Redux store.
+- `src/router/routes.tsx` — маршруты `/`, `/login` и `/account`.
+- `src/router/router.ts` — browser router с базовым путём Vite.
 - `src/features/auth/ui/LoginView.tsx` — форма с управляемыми полями: `value` и `onChange`.
 - `src/features/auth/hooks/useLogin.ts` — hook с состоянием формы (`useState`), валидацией и запросами к API.
 - `src/stores/index.ts` — Redux store, созданный через `configureStore`, и типы состояния/dispatch.
