@@ -1,54 +1,53 @@
-# web
+# Mini Media — фронтенд
 
-This template should help get you started developing with Vue 3 in Vite.
+React 19 + Redux Toolkit + TypeScript + Vite. Бэкенд NestJS находится в соседней папке `api`.
 
-## Recommended IDE Setup
+## Запуск
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Recommended Browser Setup
-
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
+Требуется Node.js 20.19+ или 22.12+ (рекомендуется Node.js 24).
 
 ```sh
+cd web
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+Скопируйте `.env.example` в `.env.development`, если файла ещё нет.
+Переменная `VITE_API_URL` должна указывать на запущенный API, например `http://localhost:3000`.
+Для production задайте её в `.env.production` или в окружении сборки.
 
 ```sh
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+Откройте `http://localhost:5173`. Этот порт также разрешён в CORS бэкенда.
+
+## Структура для изучения React
+
+- `src/main.tsx` — точка входа: `createRoot`, роутер и Redux `Provider`.
+- `src/App.tsx` — маршруты `/login` и `/account` (React Router).
+- `src/features/auth/ui/LoginView.tsx` — форма с управляемыми полями: `value` и `onChange`.
+- `src/features/auth/hooks/useLogin.ts` — hook с состоянием формы (`useState`), валидацией и запросами к API.
+- `src/stores/index.ts` — Redux store, созданный через `configureStore`, и типы состояния/dispatch.
+- `src/stores/auth.ts` — slice авторизации: пользователь, токен, действия `setAuth` и `logout`, селекторы.
+- `src/stores/hooks.ts` — типизированные hooks `useAppDispatch` и `useAppSelector`.
+- `src/ui-kit` — переиспользуемые React-компоненты; CSS вынесен в соседние файлы.
+- `src/core/api-client` — HTTP-клиент на `fetch`.
+
+После успешного запроса `useLogin` вызывает `dispatch(setAuth(...))`, а экран профиля читает пользователя через `useAppSelector(selectUser)`.
+Выход вызывает `dispatch(logout())` и очищает данные авторизации. Поля формы остаются локальными в `useState`.
+Redux DevTools позволяет смотреть изменения состояния и отправленные действия в браузере.
+
+Сессия хранится в памяти и сбрасывается после обновления страницы, как в прежнем фронтенде.
+Флажок Remember me пока не добавляет сохранение сессии. Регистрация возвращает профиль без токена — это текущий контракт API.
+
+## Проверки
 
 ```sh
 npm run build
-```
-
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-npm run test:unit
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
+npm run test:unit -- --run
 npm run lint
 ```
+
+`build` проверяет TypeScript и собирает приложение в `dist`.
+Тесты проверяют маршруты, валидацию, вход, регистрацию, выход и ошибки API с подменой `fetch`.
+Для React-компонентов в редакторе достаточно встроенной поддержки TypeScript/TSX.

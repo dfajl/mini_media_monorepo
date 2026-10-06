@@ -1,39 +1,3 @@
-<script setup lang="ts">
-type SegmentOption<T extends string> = {
-  value: T;
-  label: string;
-};
-
-const props = withDefaults(
-  defineProps<{
-    options: readonly SegmentOption<string>[];
-    disabled?: boolean;
-  }>(),
-  {
-    disabled: false,
-  },
-);
-
-const model = defineModel<string>({ required: true });
-</script>
-
-<template>
-  <div class="ui-segmented" :class="{ 'ui-segmented--disabled': disabled }">
-    <button
-      v-for="option in props.options"
-      :key="option.value"
-      type="button"
-      class="ui-segmented__tab"
-      :class="{ 'ui-segmented__tab--active': model === option.value }"
-      :disabled="disabled"
-      @click="model = option.value"
-    >
-      {{ option.label }}
-    </button>
-  </div>
-</template>
-
-<style scoped>
 .ui-segmented {
   display: inline-flex;
   gap: 4px;
@@ -79,5 +43,3 @@ const model = defineModel<string>({ required: true });
 .ui-segmented--disabled {
   opacity: 0.85;
 }
-</style>
-

@@ -1,5 +1,4 @@
-import { computed, ref } from 'vue'
-import { defineStore } from 'pinia'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 export type AuthUser = {
   id: string
@@ -11,32 +10,30 @@ export type AuthUser = {
   lastLoginAt: string
 }
 
-export const useAuthStore = defineStore('auth', () => {
-  const accessToken = ref<string | null>(null)
-  const tokenType = ref<'Bearer' | null>(null)
-  const user = ref<AuthUser | null>(null)
+type AuthPayload = { accessToken?: string; tokenType?: 'Bearer'; user: AuthUser }
+type AuthState = { accessToken: string | null; tokenType: 'Bearer' | null; user: AuthUser | null }
 
-  const isAuthenticated = computed(() => Boolean(accessToken.value && tokenType.value))
+const initialState: AuthState = { accessToken: null, tokenType: null, user: null }
 
-  function setAuth(payload: { accessToken?: string; tokenType?: 'Bearer'; user: AuthUser }) {
-    accessToken.value = payload.accessToken ?? null
-    tokenType.value = payload.tokenType ?? null
-    user.value = payload.user
-  }
-
-  function logout() {
-    accessToken.value = null
-    tokenType.value = null
-    user.value = null
-  }
-
-  return {
-    accessToken,
-    tokenType,
-    user,
-    isAuthenticated,
-    setAuth,
-    logout,
-  }
+const authSlice = createSlice({
+  name: 'auth',
+  initialState,
+  reducers: {
+    setAuth(_state, { payload }: PayloadAction<AuthPayload>): AuthState {
+      return {
+        accessToken: payload.accessToken ?? null,
+        tokenType: payload.tokenType ?? null,
+        user: payload.user,
+      }
+    },
+    logout: () => initialState,
+  },
+  selectors: {
+    selectUser: (state) => state.user,
+    selectIsAuthenticated: (state) => Boolean(state.accessToken && state.tokenType),
+  },
 })
 
+export const { setAuth, logout } = authSlice.actions
+export const { selectUser, selectIsAuthenticated } = authSlice.selectors
+export default authSlice.reducer
