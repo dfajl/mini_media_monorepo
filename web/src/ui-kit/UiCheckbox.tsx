@@ -1,4 +1,4 @@
-import './UiCheckbox.css'
+import './UiCheckbox.css';
 
 export default function UiCheckbox({
 	label = '',
@@ -6,10 +6,10 @@ export default function UiCheckbox({
 	checked,
 	onChange,
 }: {
-	label?: string
-	disabled?: boolean
-	checked: boolean
-	onChange: (value: boolean) => void
+	label?: string;
+	disabled?: boolean;
+	checked: boolean;
+	onChange: (value: boolean) => void;
 }) {
 	return (
 		<label className={`ui-checkbox ${disabled ? 'ui-checkbox--disabled' : ''}`}>
@@ -23,5 +23,5 @@ export default function UiCheckbox({
 			<span className='ui-checkbox__box' />
 			<span className='ui-checkbox__label'>{label}</span>
 		</label>
-	)
+	);
 }

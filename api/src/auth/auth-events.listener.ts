@@ -5,61 +5,57 @@ import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class AuthEventsListener {
-  private readonly logger = new Logger(AuthEventsListener.name);
+	private readonly logger = new Logger(AuthEventsListener.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+	constructor(private readonly prisma: PrismaService) {}
 
-  @OnEvent(authEvents.AUTH_LOGIN_SUCCESS_EVENT)
-  async handleLoginSuccess(event: authEvents.AuthLoginSuccessEvent) {
-    // Дополнительная проверка: метод действительно вызван именно как обработчик события
-    this.logger.debug(
-      `handleLoginSuccess invoked for userId=${event.userId} email=${event.email}`,
-    );
+	@OnEvent(authEvents.AUTH_LOGIN_SUCCESS_EVENT)
+	async handleLoginSuccess(event: authEvents.AuthLoginSuccessEvent) {
+		// Дополнительная проверка: метод действительно вызван именно как обработчик события
+		this.logger.debug(`handleLoginSuccess invoked for userId=${event.userId} email=${event.email}`);
 
-    try {
-      const at = new Date(event.at);
+		try {
+			const at = new Date(event.at);
 
-      // upsert: если пользователя (по email) ещё нет — создаём,
-      // если есть — обновляем время последнего логина.
-      await this.prisma.user.upsert({
-        // `where` — критерий поиска записи, по которой Prisma поймёт:
-        // существует ли пользователь уже в базе.
-        //
-        // Важно: поле в `where` должно быть уникальным/идентифицирующим
-        // (у нас `email` помечен в schema.prisma как `@unique`).
-        where: { email: event.email },
+			// upsert: если пользователя (по email) ещё нет — создаём,
+			// если есть — обновляем время последнего логина.
+			await this.prisma.user.upsert({
+				// `where` — критерий поиска записи, по которой Prisma поймёт:
+				// существует ли пользователь уже в базе.
+				//
+				// Важно: поле в `where` должно быть уникальным/идентифицирующим
+				// (у нас `email` помечен в schema.prisma как `@unique`).
+				where: { email: event.email },
 
-        // `create` — что вставлять в БД, если пользователь НЕ найден по `where`.
-        create: {
-          id: event.userId,
-          email: event.email,
-          name: event.name,
-          surname: event.surname,
-          lastLoginAt: at,
-        },
+				// `create` — что вставлять в БД, если пользователь НЕ найден по `where`.
+				create: {
+					id: event.userId,
+					email: event.email,
+					name: event.name,
+					surname: event.surname,
+					lastLoginAt: at,
+				},
 
-        // `update` — что обновлять в БД, если пользователь найден по `where`.
-        // Здесь мы не трогаем id/email, а просто фиксируем время последнего логина.
-        update: {
-          lastLoginAt: at,
-        },
-      });
+				// `update` — что обновлять в БД, если пользователь найден по `where`.
+				// Здесь мы не трогаем id/email, а просто фиксируем время последнего логина.
+				update: {
+					lastLoginAt: at,
+				},
+			});
 
-      const prettyAt = at.toLocaleDateString('ru-RU', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-      });
+			const prettyAt = at.toLocaleDateString('ru-RU', {
+				year: 'numeric',
+				month: 'long',
+				day: 'numeric',
+				hour: '2-digit',
+				minute: '2-digit',
+				second: '2-digit',
+			});
 
-      this.logger.log(`User saved to DB: ${event.email} at ${prettyAt}`);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      this.logger.error(
-        `Failed to upsert user profile for ${event.email}: ${message}`,
-      );
-    }
-  }
+			this.logger.log(`User saved to DB: ${event.email} at ${prettyAt}`);
+		} catch (err) {
+			const message = err instanceof Error ? err.message : String(err);
+			this.logger.error(`Failed to upsert user profile for ${event.email}: ${message}`);
+		}
+	}
 }

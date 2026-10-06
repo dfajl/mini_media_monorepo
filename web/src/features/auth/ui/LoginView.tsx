@@ -4,14 +4,14 @@ import {
 	UiInput,
 	UiLoader,
 	UiSegmentedControl,
-} from '@/ui-kit'
-import { useLogin } from '../hooks/useLogin'
-import './LoginView.css'
+} from '@/ui-kit';
+import { useLogin } from '../hooks/useLogin';
+import './LoginView.css';
 
 const authModeOptions = [
 	{ value: 'signIn', label: 'Sign in' },
 	{ value: 'signUp', label: 'Sign up' },
-] as const
+] as const;
 
 export default function LoginView() {
 	const {
@@ -23,9 +23,9 @@ export default function LoginView() {
 		loading,
 		errorMessage,
 		submit,
-	} = useLogin()
+	} = useLogin();
 
-	const signingIn = mode === 'signIn'
+	const signingIn = mode === 'signIn';
 	return (
 		<main className='auth-page'>
 			<section className='auth-card'>
@@ -48,8 +48,8 @@ export default function LoginView() {
 					className='auth-form'
 					noValidate
 					onSubmit={(event) => {
-						event.preventDefault()
-						void submit()
+						event.preventDefault();
+						void submit();
 					}}
 				>
 					<div
@@ -139,5 +139,5 @@ export default function LoginView() {
 				</form>
 			</section>
 		</main>
-	)
+	);
 }

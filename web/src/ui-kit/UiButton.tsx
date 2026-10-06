@@ -1,12 +1,12 @@
-import type { ButtonHTMLAttributes } from 'react'
-import UiLoader from './UiLoader'
-import './UiButton.css'
+import type { ButtonHTMLAttributes } from 'react';
+import UiLoader from './UiLoader';
+import './UiButton.css';
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
-	variant?: 'primary' | 'secondary' | 'ghost'
-	loading?: boolean
-	fullWidth?: boolean
-}
+	variant?: 'primary' | 'secondary' | 'ghost';
+	loading?: boolean;
+	fullWidth?: boolean;
+};
 
 export default function UiButton({
 	variant = 'primary',
@@ -29,5 +29,5 @@ export default function UiButton({
 			{loading && <UiLoader size='sm' className='ui-button__loader' label='Loading button state' />}
 			<span>{children}</span>
 		</button>
-	)
+	);
 }

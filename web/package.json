@@ -1,53 +1,53 @@
 {
-  "name": "web",
-  "version": "0.0.0",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "run-p type-check \"build-only {@}\" --",
-    "preview": "vite preview",
-    "test:unit": "vitest",
-    "build-only": "vite build",
-    "type-check": "tsc --build",
-    "lint": "run-s lint:*",
-    "lint:oxlint": "oxlint . --fix",
-    "lint:eslint": "eslint . --fix --cache",
-    "format": "prettier --write --experimental-cli src/"
-  },
-  "dependencies": {
-    "@reduxjs/toolkit": "^2.0.0",
-    "react-redux": "^9.0.0",
-    "react-router": "^7.0.0",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0"
-  },
-  "devDependencies": {
-    "@tsconfig/node24": "^24.0.4",
-    "@types/jsdom": "^28.0.0",
-    "@types/node": "^24.10.13",
-    "@vitest/eslint-plugin": "^1.6.9",
-    "eslint": "^10.0.2",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-oxlint": "~1.50.0",
-    "jiti": "^2.6.1",
-    "jsdom": "^28.1.0",
-    "npm-run-all2": "^8.0.4",
-    "oxlint": "~1.50.0",
-    "prettier": "3.8.1",
-    "typescript": "~5.9.3",
-    "vite": "^7.3.1",
-    "vitest": "^4.0.18",
-    "@vitejs/plugin-react": "^5.0.0",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "@testing-library/react": "^16.0.0",
-    "@testing-library/user-event": "^14.0.0",
-    "typescript-eslint": "^8.0.0",
-    "@eslint/js": "^10.0.0",
-    "eslint-plugin-react-hooks": "^7.0.0"
-  },
-  "engines": {
-    "node": "^20.19.0 || >=22.12.0"
-  }
+	"name": "web",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "run-p type-check \"build-only {@}\" --",
+		"preview": "vite preview",
+		"test:unit": "vitest",
+		"build-only": "vite build",
+		"type-check": "tsc --build",
+		"lint": "run-s lint:*",
+		"lint:oxlint": "oxlint . --fix",
+		"lint:eslint": "eslint . --fix --cache",
+		"format": "prettier --write --experimental-cli src/"
+	},
+	"dependencies": {
+		"@reduxjs/toolkit": "^2.0.0",
+		"react-redux": "^9.0.0",
+		"react-router": "^7.0.0",
+		"react": "^19.3.0",
+		"react-dom": "^19.3.0"
+	},
+	"devDependencies": {
+		"@tsconfig/node24": "^24.0.4",
+		"@types/jsdom": "^28.0.0",
+		"@types/node": "^24.10.13",
+		"@vitest/eslint-plugin": "^1.6.9",
+		"eslint": "^10.0.2",
+		"eslint-config-prettier": "^10.1.8",
+		"eslint-plugin-oxlint": "~1.50.0",
+		"jiti": "^2.6.1",
+		"jsdom": "^28.1.0",
+		"npm-run-all2": "^8.0.4",
+		"oxlint": "~1.50.0",
+		"prettier": "3.8.1",
+		"typescript": "~5.9.3",
+		"vite": "^7.3.1",
+		"vitest": "^4.0.18",
+		"@vitejs/plugin-react": "^5.0.0",
+		"@types/react": "^19.0.0",
+		"@types/react-dom": "^19.0.0",
+		"@testing-library/react": "^16.0.0",
+		"@testing-library/user-event": "^14.0.0",
+		"typescript-eslint": "^8.0.0",
+		"@eslint/js": "^10.0.0",
+		"eslint-plugin-react-hooks": "^7.0.0"
+	},
+	"engines": {
+		"node": "^20.19.0 || >=22.12.0"
+	}
 }

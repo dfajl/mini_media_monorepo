@@ -1,11 +1,11 @@
-import './UiSegmentedControl.css'
+import './UiSegmentedControl.css';
 
 type Props<T extends string> = {
-	options: readonly { value: T; label: string }[]
-	value: T
-	onChange: (value: T) => void
-	disabled?: boolean
-}
+	options: readonly { value: T; label: string }[];
+	value: T;
+	onChange: (value: T) => void;
+	disabled?: boolean;
+};
 
 export default function UiSegmentedControl<T extends string>({
 	options,
@@ -32,5 +32,5 @@ export default function UiSegmentedControl<T extends string>({
 				</button>
 			))}
 		</div>
-	)
+	);
 }

@@ -1,28 +1,28 @@
 .ui-loader {
-  display: inline-block;
-  border-radius: 999px;
-  border: 2px solid currentColor;
-  border-top-color: transparent;
-  animation: ui-loader-spin 0.7s linear infinite;
+	display: inline-block;
+	border-radius: 999px;
+	border: 2px solid currentColor;
+	border-top-color: transparent;
+	animation: ui-loader-spin 0.7s linear infinite;
 }
 
 .ui-loader--sm {
-  width: 14px;
-  height: 14px;
+	width: 14px;
+	height: 14px;
 }
 
 .ui-loader--md {
-  width: 18px;
-  height: 18px;
+	width: 18px;
+	height: 18px;
 }
 
 .ui-loader--lg {
-  width: 22px;
-  height: 22px;
+	width: 22px;
+	height: 22px;
 }
 
 @keyframes ui-loader-spin {
-  to {
-    transform: rotate(360deg);
-  }
+	to {
+		transform: rotate(360deg);
+	}
 }

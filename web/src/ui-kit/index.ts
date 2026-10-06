@@ -1,5 +1,5 @@
-export { default as UiButton } from './UiButton'
-export { default as UiInput } from './UiInput'
-export { default as UiCheckbox } from './UiCheckbox'
-export { default as UiLoader } from './UiLoader'
-export { default as UiSegmentedControl } from './UiSegmentedControl'
+export { default as UiButton } from './UiButton';
+export { default as UiInput } from './UiInput';
+export { default as UiCheckbox } from './UiCheckbox';
+export { default as UiLoader } from './UiLoader';
+export { default as UiSegmentedControl } from './UiSegmentedControl';

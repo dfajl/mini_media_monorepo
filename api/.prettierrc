@@ -1,8 +1,0 @@
-{
-	"plugins": ["./formatting/destructuring.mjs"],
-	"singleQuote": true,
-	"jsxSingleQuote": true,
-	"useTabs": true,
-	"tabWidth": 2,
-	"trailingComma": "all"
-}

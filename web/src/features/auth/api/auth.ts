@@ -1,47 +1,47 @@
 import { apiClient } from '@/core/api-client';
 
 export type LoginRequest = {
-  email: string;
-  password: string;
+	email: string;
+	password: string;
 };
 
 export type LoginResponse = {
-  accessToken: string;
-  tokenType: 'Bearer';
-  user: {
-    id: string;
-    email: string;
-    name: string | null;
-    surname: string | null;
-    birthDate: string | null;
-    createdAt: string;
-    lastLoginAt: string;
-  };
+	accessToken: string;
+	tokenType: 'Bearer';
+	user: {
+		id: string;
+		email: string;
+		name: string | null;
+		surname: string | null;
+		birthDate: string | null;
+		createdAt: string;
+		lastLoginAt: string;
+	};
 };
 
 export function login(payload: LoginRequest) {
-  return apiClient.post<LoginResponse>('/auth/login', payload);
+	return apiClient.post<LoginResponse>('/auth/login', payload);
 }
 
 export type SignUpRequest = {
-  fullName: string;
-  birthDate: string;
-  email: string;
-  password: string;
+	fullName: string;
+	birthDate: string;
+	email: string;
+	password: string;
 };
 
 export type SignUpResponse = {
-  user: {
-    id: string;
-    email: string;
-    name: string | null;
-    surname: string | null;
-    birthDate: string | null;
-    createdAt: string;
-    lastLoginAt: string;
-  };
+	user: {
+		id: string;
+		email: string;
+		name: string | null;
+		surname: string | null;
+		birthDate: string | null;
+		createdAt: string;
+		lastLoginAt: string;
+	};
 };
 
 export function signUp(payload: SignUpRequest) {
-  return apiClient.post<SignUpResponse>('/auth/sign-up', payload);
+	return apiClient.post<SignUpResponse>('/auth/sign-up', payload);
 }

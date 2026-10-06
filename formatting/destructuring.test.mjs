@@ -1,8 +1,37 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
+import { fileURLToPath } from 'node:url';
 import prettier from '../web/node_modules/prettier/index.mjs';
 import webPlugin from '../web/formatting/destructuring.mjs';
 import apiPlugin from '../api/formatting/destructuring.mjs';
+
+test('the shared config uses identical rules in both projects and loads the plugin', async () => {
+	let previousConfig;
+	for (const [project, filename] of [
+		['web', 'src/App.tsx'],
+		['api', 'src/main.ts'],
+	]) {
+		const filepath = fileURLToPath(new URL(`../${project}/${filename}`, import.meta.url));
+		const configPath = await prettier.resolveConfigFile(filepath);
+		assert.equal(configPath, fileURLToPath(new URL('../prettier.config.mjs', import.meta.url)));
+		const config = await prettier.resolveConfig(filepath, {
+			editorconfig: true,
+		});
+		assert.equal(config.useTabs, true);
+		assert.equal(config.singleQuote, true);
+		assert.equal(config.jsxSingleQuote, true);
+		assert.equal(config.printWidth, 100);
+		assert.equal(config.semi, true);
+		if (previousConfig) assert.deepEqual(config, previousConfig);
+		previousConfig = config;
+		const source = 'import { a, b, c, d } from "source"; const { one, two, three, four } = value;';
+		const formatted = await prettier.format(source, { ...config, filepath });
+		assert.match(formatted, /import \{\n\ta,\n\tb,\n\tc,\n\td,/);
+		assert.match(formatted, /const \{\n\tone,\n\ttwo,\n\tthree,\n\tfour,/);
+		assert.equal(formatted.trimEnd().endsWith(';'), true);
+		assert.equal(await prettier.format(formatted, { ...config, filepath }), formatted);
+	}
+});
 
 for (const [project, plugin] of [
 	['web', webPlugin],
@@ -37,10 +66,7 @@ for (const [project, plugin] of [
 				assert.match(formatted, /\{\n/);
 				assert.equal(await prettier.format(formatted, options), formatted);
 			}
-			assert.match(
-				await prettier.format(sources[4], options),
-				/with \{ type: 'json' \}/,
-			);
+			assert.match(await prettier.format(sources[4], options), /with \{ type: 'json' \}/);
 			for (const source of [
 				'import main, { a, b, c } from "source"',
 				'import * as all from "source"',
@@ -90,10 +116,7 @@ for (const [project, plugin] of [
 			const comment = await prettier.format(sources[2], options);
 			assert.match(comment, /\/\* explanation \*\//);
 			assert.equal(
-				await prettier.format(
-					'const value = { a: 1, b: 2, c: 3, d: 4 }',
-					options,
-				),
+				await prettier.format('const value = { a: 1, b: 2, c: 3, d: 4 }', options),
 				await prettier.format('const value = { a: 1, b: 2, c: 3, d: 4 }', {
 					...options,
 					plugins: [],

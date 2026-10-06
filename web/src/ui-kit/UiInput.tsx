@@ -1,11 +1,11 @@
-import { useId, type InputHTMLAttributes } from 'react'
-import './UiInput.css'
+import { useId, type InputHTMLAttributes } from 'react';
+import './UiInput.css';
 
 type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'> & {
-	label?: string
-	error?: string
-	onChange: (value: string) => void
-}
+	label?: string;
+	error?: string;
+	onChange: (value: string) => void;
+};
 
 export default function UiInput({
 	label,
@@ -14,7 +14,7 @@ export default function UiInput({
 	type = 'text',
 	...props
 }: Props) {
-	const errorId = useId()
+	const errorId = useId();
 	return (
 		<label className='ui-input'>
 			{label && <span className='ui-input__label'>{label}</span>}
@@ -32,5 +32,5 @@ export default function UiInput({
 				</span>
 			)}
 		</label>
-	)
+	);
 }
