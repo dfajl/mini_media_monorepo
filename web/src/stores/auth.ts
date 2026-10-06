@@ -11,7 +11,11 @@ export type AuthUser = {
 };
 
 type AuthPayload = { accessToken?: string; tokenType?: 'Bearer'; user: AuthUser };
-type AuthState = { accessToken: string | null; tokenType: 'Bearer' | null; user: AuthUser | null };
+type AuthState = {
+	accessToken: string | null;
+	tokenType: 'Bearer' | null;
+	user: AuthUser | null;
+};
 
 const initialState: AuthState = { accessToken: null, tokenType: null, user: null };
 

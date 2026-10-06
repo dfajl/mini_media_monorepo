@@ -19,7 +19,9 @@ export type LoginFormErrors = Partial<Record<keyof Omit<LoginForm, 'rememberMe'>
 export function useLogin() {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
+
 	const [mode, setMode] = useState<AuthMode>('signIn');
+
 	const [form, setForm] = useState<LoginForm>({
 		fullName: '',
 		birthDate: '',
@@ -27,6 +29,7 @@ export function useLogin() {
 		password: '',
 		rememberMe: false,
 	});
+
 	const [errors, setErrors] = useState<LoginFormErrors>({});
 	const [loading, setLoading] = useState(false);
 	const [errorMessage, setErrorMessage] = useState('');
@@ -37,13 +40,23 @@ export function useLogin() {
 	}
 
 	async function submit() {
-		if (submitting.current) return;
+		if (submitting.current) {
+			return;
+		}
+
 		setErrorMessage('');
+
 		const nextErrors = validateAuthForm(mode, form);
+
 		setErrors(nextErrors);
-		if (Object.keys(nextErrors).length) return;
+
+		if (Object.keys(nextErrors).length) {
+			return;
+		}
+
 		submitting.current = true;
 		setLoading(true);
+
 		try {
 			if (mode === 'signUp') {
 				const result = await signUp({
@@ -55,7 +68,14 @@ export function useLogin() {
 				dispatch(setAuth({ user: result.user }));
 				updateField('password', '');
 			} else {
-				dispatch(setAuth(await login({ email: form.email, password: form.password })));
+				dispatch(
+					setAuth(
+						await login({
+							email: form.email,
+							password: form.password,
+						}),
+					),
+				);
 			}
 			await navigate('/account');
 		} catch (error: unknown) {
