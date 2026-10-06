@@ -1,10 +1,8 @@
 {
 	"$schema": "https://json.schemastore.org/prettierrc",
-	"plugins": ["./formatting/destructuring.mjs"],
-	"semi": false,
+	"plugins": ["./web/formatting/destructuring.mjs"],
 	"singleQuote": true,
 	"jsxSingleQuote": true,
 	"useTabs": true,
-	"tabWidth": 2,
-	"printWidth": 100
+	"tabWidth": 2
 }
